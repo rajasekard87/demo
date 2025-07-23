@@ -11,7 +11,7 @@ pipeline {
             steps {
                 sshagent (credentials: ['jenkins-ssh-key']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST '
+                    ssh -t -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST '
                         echo "🔧 Updating packages..." &&
                         sudo apt update &&
                         echo "📦 Installing Apache2..." &&
