@@ -4,6 +4,7 @@ pipeline {
     environment {
         REMOTE_USER = 'ubuntu'
         REMOTE_HOST = '10.192.209.112'
+        APACHE_URL = 'http://10.192.209.112'
     }
 
     stages {
@@ -23,6 +24,22 @@ pipeline {
                     '
                     """
                 }
+            }
+        }
+        stage('Verify Apache URL Reachability') {
+            steps {
+                sh """
+                echo "🌐 Checking URL: \$APACHE_URL"
+                sleep 5
+                HTTP_STATUS=\$(curl -o /dev/null -s -w "%{http_code}" \$APACHE_URL)
+
+                if [ "\$HTTP_STATUS" -eq 200 ]; then
+                  echo "✅ Apache is reachable at \$APACHE_URL"
+                else
+                  echo "❌ Apache is NOT reachable. Status code: \$HTTP_STATUS"
+                  exit 1
+                fi
+                """
             }
         }
     }
